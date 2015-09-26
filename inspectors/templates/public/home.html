@@ -1,0 +1,39 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+
+  <h2>Miami-Dade County<br>Inspector Feedback</h2>
+
+  <p class="lead">This is a pilot program that allows homeowners and contractors to give constructive feedback to Miami-Dade County inspectors.</p>
+  <p><a href="{{ url_for('public.about') }}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+</div><!-- /.jumbotron -->
+
+    <h3>We'd like to give you a way for you to give feedback when you go through your upcoming inspections.</h3>
+
+    <p>Each time you are visited by a Miami-Dade County Inspector, you will be given a link to a feedback survey about his/her performance via e-mail or text message.</p>
+
+    <p>This feedback will be aggregated and sent to management about inspector performance. Specific feedback you give about an inspector will not be to them unless you give identifying information.</p>
+
+    <h4>Registration Form</h4>
+
+    <form>
+      <div class="form-group">
+        <label for="permit-number">Miami-Dade County Permit or Process Number</label>
+        <input type="text" class="form-control" id="permit-number" placeholder="examples: 2015000000, C2015000000">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label for="smsphone">Phone</label>
+        <input type="tel" class="form-control" id="smsphone" placeholder="305-555-5555">
+      </div>
+      <input type="submit" class="btn btn-primary" value="Sign me up!">
+    </form>
+
+</div -->
+{% endblock %}
+
