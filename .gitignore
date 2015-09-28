@@ -44,3 +44,10 @@ docs/_build
 
 # Virtualenvs
 env/
+
+# environment
+.env
+
+# Vim
+*.sw[op]
+
