@@ -14,22 +14,23 @@
 
     <p>Each time you are visited by a Miami-Dade County Inspector, you will be given a link to a feedback survey about his/her performance via e-mail or text message.</p>
 
-    <p>This feedback will be aggregated and sent to management about inspector performance. Specific feedback you give about an inspector will not be to them unless you give identifying information.</p>
+    <p>This feedback will be aggregated and sent to management about inspector performance.</p>
 
     <h4>Registration Form</h4>
 
-    <form>
+    <form id="registerForm" class="form form-register" method="POST" action="" role="form">
+      {{ form.hidden_tag() }}
       <div class="form-group">
-        <label for="permit-number">Miami-Dade County Permit or Process Number</label>
-        <input type="text" class="form-control" id="permit-number" placeholder="examples: 2015000000, C2015000000">
+        {{form.permit_id.label}}
+        {{form.permit_id(placeholder="examples: 2015000000, C2015000000", class_="form-control")}}
       </div>
       <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+        {{form.email.label}}
+        {{form.email(placeholder="Email", class_="form-control")}}
       </div>
       <div class="form-group">
-        <label for="smsphone">Phone</label>
-        <input type="tel" class="form-control" id="smsphone" placeholder="305-555-5555">
+        {{form.sms.label}}
+        {{form.sms(placeholder="305-555-5555", class_="form-control")}}
       </div>
       <input type="submit" class="btn btn-primary" value="Sign me up!">
     </form>
