@@ -6,7 +6,6 @@ from flask_script.commands import Clean, ShowUrls
 from flask_migrate import MigrateCommand
 
 from inspectors.app import create_app
-from inspectors.user.models import User
 from inspectors.settings import DevConfig, ProdConfig
 from inspectors.database import db
 
@@ -23,9 +22,9 @@ manager = Manager(app)
 
 def _make_context():
     """Return context dict for a shell session so you can access
-    app, db, and the User model by default.
+    app, and db.
     """
-    return {'app': app, 'db': db, 'User': User}
+    return {'app': app, 'db': db}
 
 
 @manager.command

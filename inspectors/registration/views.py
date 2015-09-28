@@ -4,13 +4,17 @@ from flask import (Blueprint, request, render_template, flash, url_for, redirect
 from flask_login import login_user, login_required, logout_user
 
 from inspectors.extensions import login_manager
-from inspectors.user.models import User
-from inspectors.public.forms import LoginForm
-from inspectors.user.forms import RegisterForm
+from inspectors.registration.models import User
+from inspectors.inspections.models import (
+        Supervisor,
+        Inspector,
+        Inspection
+        )
+from inspectors.registration.forms import RegisterForm
 from inspectors.utils import flash_errors
 from inspectors.database import db
 
-blueprint = Blueprint('public', __name__, static_folder="../static")
+blueprint = Blueprint('registration', __name__, static_folder="../static")
 
 
 @login_manager.user_loader
@@ -58,5 +62,4 @@ def register():
 
 @blueprint.route("/about/")
 def about():
-    form = LoginForm(request.form)
-    return render_template("public/about.html", form=form)
+    return render_template("public/about.html")

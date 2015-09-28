@@ -4,7 +4,7 @@ from wtforms import TextField
 from wtforms.validators import DataRequired, Optional, Email, Length
 
 from .util import is_valid_permit
-# from .models import User
+from .models import User
 
 
 class RegisterForm(Form):
