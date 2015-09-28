@@ -9,4 +9,4 @@ def is_valid_permit(id):
     response = requests.get(API)
     json_result = response.json()
 
-    return json_result is not None
+    return json_result
