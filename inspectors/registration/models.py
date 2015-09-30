@@ -10,6 +10,7 @@ from inspectors.database import (
     SurrogatePK,
 )
 
+
 class User(Model):
     """A greatly simplified user model that does not log in
     """
@@ -17,12 +18,10 @@ class User(Model):
 
     id = Column(db.Integer, primary_key=True, index=True)
     permit_number = Column(db.String(25), nullable=False, index=True)
-    date_registered = Column(db.DateTime, nullable=False,
-            default=dt.datetime.utcnow)
+    date_registered = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     email = Column(db.String(80), nullable=True)
     phone_number = Column(db.String(15), nullable=True)
     active = Column(db.Boolean(), default=True)
 
     def __repr__(self):
         return '<User({0})>'.format(self.permit_number)
-

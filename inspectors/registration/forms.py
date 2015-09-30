@@ -8,9 +8,9 @@ from .models import User
 
 
 class RegisterForm(Form):
-    permit_id = TextField('Miami-Dade County Permit or Process Number', validators=[DataRequired(), Length(min=10, max=25)])
+    permit_number = TextField('Miami-Dade County Permit or Process Number', validators=[DataRequired(), Length(min=10, max=25)])
     email = TextField('Email address (optional)', validators=[Optional(), Email(), Length(min=6, max=40)])
-    sms = TextField('Phone number to get SMS updates (optional)', validators=[Optional(), Length(min=10, max=40)])
+    phone_number = TextField('Phone number to get SMS updates (optional)', validators=[Optional(), Length(min=10, max=40)])
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -23,8 +23,8 @@ class RegisterForm(Form):
         if not self.email.data and not self.sms.data:
             self.email.errors.append("We need either an e-mail or an SMS to notify you.")
             return False
-        if not is_valid_permit(self.permit_id.data):
-            self.permit_id.errors.append(self.permit_id.data + " doesn't seem to be a valid Miami-Dade County Permit or Process Number.")
+        if not is_valid_permit(self.permit_number.data):
+            self.permit_number.errors.append(self.permit_number.data + " doesn't seem to be a valid Miami-Dade County Permit or Process Number.")
             return False
 
         '''
