@@ -21,6 +21,8 @@ class ProdConfig(Config):
     """Production configuration."""
     ENV = 'prod'
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os_env.get('DATABASE_URI',
+            'postgresql://localhost/mdc_inspectors')
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
 
 
@@ -28,7 +30,8 @@ class DevConfig(Config):
     """Development configuration."""
     ENV = 'dev'
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/mdc_inspectors'
+    SQLALCHEMY_DATABASE_URI = os_env.get('DATABASE_URI',
+            'postgresql://localhost/mdc_inspectors')
     DEBUG_TB_ENABLED = True
     ASSETS_DEBUG = True  # Don't bundle/minify static assets
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
