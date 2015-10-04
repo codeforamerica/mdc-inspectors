@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
+import sys
+import logging
+
 from flask import Flask, render_template
 
 from inspectors.settings import ProdConfig
@@ -27,6 +30,7 @@ def create_app(config_object=ProdConfig):
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
+    register_logging(app)
     return app
 
 
@@ -54,4 +58,16 @@ def register_errorhandlers(app):
         return render_template("{0}.html".format(error_code)), error_code
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)
+    return None
+
+def register_logging(app):
+    app.logger.removeHandler(app.logger.handlers[0])
+    app.logger.setLevel(logging.DEBUG)
+    stdout = logging.StreamHandler(sys.stdout)
+    stdout.setFormatter(logging.Formatter(
+'''--------------------------------------------------
+{asctime} | {levelname} in {module} [{funcName}] | {pathname}:{lineno} | {message}
+--------------------------------------------------
+'''))
+    app.logger.addHandler(stdout)
     return None
