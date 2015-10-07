@@ -12,10 +12,12 @@ from .models import (
         Inspection
         )
 
+SOCRATA_DATE_FMT = "%Y/%m/%d"
+
 class SocrataInspectionSchema(ma.ModelSchema):
 
     date_inspected = fields.DateTime(
-            format="%Y/%m/%d",
+            format=SOCRATA_DATE_FMT,
             load_from="date")
     permit_description = fields.String(
             load_from="inspection_description")

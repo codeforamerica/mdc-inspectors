@@ -12,6 +12,7 @@ import requests
 from inspectors.extensions import db
 from inspectors.app import create_app
 from inspectors.inspections.serializers import (
+            SOCRATA_DATE_FMT,
             supervisor_schema,
             inspector_schema,
             inspection_schema
@@ -40,7 +41,7 @@ def socrata_query():
     timedelta = dt.timedelta(days=-3)
     now = dt.datetime.now()
     three_days_ago = now + timedelta
-    date_format = "%Y/%m/%d"
+    date_format = SOCRATA_DATE_FMT
     endpoint = "https://opendata.miamidade.gov/resource/ba6h-bksp.json"
     query = "?$where=date > '{three_days_ago}' AND date < '{now}'".format(
             three_days_ago=three_days_ago.strftime(date_format),
