@@ -36,6 +36,7 @@ class DevConfig(Config):
 class TestConfig(Config):
     TESTING = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os_env['TEST_DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = os_env.get('TEST_DATABASE_URL',
+            'postgresql://localhost/mdc_inspectors_test')
     BCRYPT_LOG_ROUNDS = 1  # For faster tests
     WTF_CSRF_ENABLED = False  # Allows form testing
