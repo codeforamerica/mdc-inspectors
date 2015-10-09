@@ -7,6 +7,8 @@ import json
 import os
 from pprint import pprint
 
+from flask import current_app
+
 import requests
 
 from inspectors.extensions import db
@@ -15,22 +17,13 @@ from inspectors.inspections.serializers import (
             SOCRATA_DATE_FMT,
             supervisor_schema,
             inspector_schema,
-            inspection_schema
+            inspection_schema,
+            DataLoader
         )
 
 
 USE_JSON_CACHE = False
 json_cache_path = "data.json"
-
-def slice_data(schema, data):
-    keys = []
-    for name, field in schema.fields.items():
-        if field.load_from:
-            keys.append(field.load_from)
-        else:
-            keys.append(name)
-    sliced = {k:data[k] for k in keys if k in data}
-    return sliced
 
 
 def json_cache_exists():
@@ -66,45 +59,22 @@ def get_data():
     return data
 
 
-def index_or_add(items, new_item):
-    try:
-        index = items.index(new_item)
-    except ValueError:
-        index = len(items)
-        items.append(new_item)
-    return index
-
 
 def load_data():
     data = get_data()
 
-    supervisors = []
-    inspectors = []
-    inspections = []
+    loaders = [DataLoader(s) for s in (
+            supervisor_schema,
+            inspector_schema,
+            inspection_schema,
+        )]
 
-    # build up unique raw data instances for each data type
     for row in data:
-        supervisor_data = slice_data(supervisor_schema, row)
-        inspector_data = slice_data(inspector_schema, row)
-        inspection_data = slice_data(inspection_schema, row)
+        for loader in loaders:
+            loader.slice_and_add(row)
 
-        index_or_add(supervisors, supervisor_data)
-        index_or_add(inspectors, inspector_data)
-        index_or_add(inspections, inspection_data)
-
-    # parse, validate and get instances if they exist
-    supervisors, errors = supervisor_schema.load(supervisors, many=True,
-            session=db.session)
-    inspectors, errors = inspector_schema.load(inspectors, many=True,
-            session=db.session)
-    inspections, errors = inspection_schema.load(inspections, many=True,
-            session=db.session)
-
-    # save data
-    for group in [supervisors, inspectors, inspections]:
-        for instance in group:
-            db.session.add(instance)
-    db.session.commit()
+    for loader in loaders:
+        models = loader.save_models_or_report_errors()
 
 
 def run():
