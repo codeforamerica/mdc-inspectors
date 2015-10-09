@@ -15,3 +15,6 @@ deploy:
 
 load_from_socrata:
 	python ./inspectors/scripts/pull_inspection_data.py
+
+add_fake_users:
+	python ./inspectors/scripts/add_fake_users.py

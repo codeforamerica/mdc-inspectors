@@ -5,9 +5,7 @@ from inspectors.database import (
     Column,
     db,
     Model,
-    ReferenceCol,
     relationship,
-    SurrogatePK,
 )
 
 

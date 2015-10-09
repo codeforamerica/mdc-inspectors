@@ -22,7 +22,7 @@ from inspectors.inspections.serializers import (
         )
 
 
-USE_JSON_CACHE = False
+USE_JSON_CACHE = True
 json_cache_path = "data.json"
 
 
