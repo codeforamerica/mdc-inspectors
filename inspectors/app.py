@@ -65,7 +65,7 @@ def register_logging(app):
     app.logger.setLevel(logging.DEBUG)
     stdout = logging.StreamHandler(sys.stdout)
     stdout.setFormatter(logging.Formatter(
-    '%(asctime)s | %(name)s | %(levelname)s in %(module)s [%(pathname)s:%(lineno)d]: %(message)s'
-    ))
+    '''-------------------------------
+%(asctime)s | %(name)s | %(levelname)s in %(module)s: %(message)s'''))
     app.logger.addHandler(stdout)
     return None

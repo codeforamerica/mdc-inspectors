@@ -3,7 +3,9 @@ Marshmallow schemas can be used to serialize and deserialize models easily
 """
 from datetime import datetime
 import json
+from pprint import pprint
 
+from sqlalchemy import inspect
 from flask import current_app
 from marshmallow import Schema, fields, post_load, pre_load
 from inspectors.extensions import ma
@@ -57,11 +59,13 @@ class DataLoader:
                 "DESERIALIZATIONERROR: '{field}': '{value}', {message}".format(
                     field=key, value=bad_input, message=message))
 
-    def log_success(self, models):
+    def log_success(self, total, new, existing):
         current_app.logger.debug(
-                "DESERIALIZED: saved {num} {cls} instances".format(
-                    num = len(models),
-                    cls = self.schema.opts.model.__name__
+            "DESERIALIZED: {total} {cls} instances, {new} new, {existing} existing".format(
+                    total = total,
+                    cls = self.schema.opts.model.__name__,
+                    new = new,
+                    existing = existing,
                     ))
 
     def save_models_or_report_errors(self):
@@ -69,6 +73,9 @@ class DataLoader:
         If there are errors, it will log them.
         If there are no errors, it will save the models and return them
         """
+        new = 0
+        existing = 0
+        total = 0
         models, errors = self.schema.load(
                     self.raw_data,
                     many=True,
@@ -77,9 +84,14 @@ class DataLoader:
         if errors:
             self.log_errors(errors)
         else:
-            map(lambda m: db.session.add(m), models)
+            for m in models:
+                if inspect(m).persistent:
+                    existing += 1
+                else:
+                    new += 1
+                db.session.add(m)
             db.session.commit()
-            self.log_success(models)
+            self.log_success(len(models), new, existing)
             return models
 
 
