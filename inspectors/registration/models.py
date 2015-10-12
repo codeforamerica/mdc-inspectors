@@ -13,6 +13,8 @@ from inspectors.database import (
 
 class User(Model):
     """A greatly simplified user model that does not log in
+        This is someone who is subscribing to requests for feedback on
+        inspections about a certain permit number.
     """
     __tablename__ = 'user'
 
@@ -25,3 +27,4 @@ class User(Model):
 
     def __repr__(self):
         return '<User({0})>'.format(self.permit_number)
+

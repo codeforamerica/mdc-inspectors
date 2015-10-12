@@ -62,19 +62,36 @@ def get_data():
 
 def load_data():
     data = get_data()
+    relations = []
 
-    loaders = [DataLoader(s) for s in (
+    supervisors, inspectors, inspections = [DataLoader(s) for s in (
             supervisor_schema,
             inspector_schema,
             inspection_schema,
         )]
 
     for row in data:
-        for loader in loaders:
-            loader.slice_and_add(row)
+        relations.append({
+            'supervisor': supervisors.slice_and_add(row),
+            'inspector': inspectors.slice_and_add(row),
+            'inspection': inspections.slice_and_add(row),
+            })
 
-    for loader in loaders:
-        models = loader.save_models_or_report_errors()
+    supervisors.save_models_or_report_errors()
+
+    inspectors.add_foreign_keys_from(
+            supervisors,
+            [ (r['inspector'], r['supervisor']) for r in relations ],
+            'supervisor_id'
+            )
+    inspectors.save_models_or_report_errors()
+
+    inspections.add_foreign_keys_from(
+            inspectors,
+            [ (r['inspection'], r['inspector']) for r in relations ],
+            'inspector_id'
+            )
+    inspections.save_models_or_report_errors()
 
 
 def run():

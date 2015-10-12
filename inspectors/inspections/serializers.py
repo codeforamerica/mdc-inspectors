@@ -27,15 +27,21 @@ class DataLoader:
     def __init__(self, schema):
         self.schema = schema
         self.raw_data = []
+        self.models = []
 
     def add(self, data, many=False):
         """adds data to a raw data set() object
         """
-        if not many:
-            data = (data,)
+        indices = []
+        data = data if many else (data,)
         for d in data:
-            if d not in self.raw_data:
+            try:
+                indices.append( self.raw_data.index(d) )
+            except ValueError:
+                indices.append( len(self.raw_data) )
                 self.raw_data.append(d)
+        return indices if many else indices[0]
+
 
     def slice_and_add(self, data):
         """adds data to the raw data set, but only the subset of keys used by
@@ -48,7 +54,14 @@ class DataLoader:
             else:
                 keys.append(name)
         sliced = {k:data[k] for k in keys if k in data}
-        self.add(sliced)
+        return self.add(sliced)
+
+    def add_foreign_keys_from(self, other, instance_index_pairs, fk_field_name):
+        for i, j in instance_index_pairs:
+            own = self.raw_data[i]
+            foreign_key_instance = other.models[j]
+            own[fk_field_name] = foreign_key_instance.id
+
 
     def log_errors(self, errors):
         for i, error in errors.items():
@@ -76,6 +89,7 @@ class DataLoader:
         new = 0
         existing = 0
         total = 0
+
         models, errors = self.schema.load(
                     self.raw_data,
                     many=True,
@@ -92,31 +106,16 @@ class DataLoader:
                 db.session.add(m)
             db.session.commit()
             self.log_success(len(models), new, existing)
+            self.models = models
             return models
 
-
-class SocrataInspectionSchema(ma.ModelSchema):
-
-    date_inspected = fields.DateTime(
-            format=SOCRATA_DATE_FMT,
-            load_from="date")
-    permit_description = fields.String(
-            load_from="inspection_description")
-    display_description = fields.String(
-            load_from="disp_description")
-    inspector_key = fields.String(load_from="inspector_id")
+class LookupMixin(ma.ModelSchema):
 
     def get_instance(self, data):
         """Overrides ModelSchema.get_instance with custom lookup fields"""
-        lookup_cols = (
-                "date_inspected",
-                "permit_number",
-                "display_description",
-                "inspector_key"
-                )
         filters = {
                 key: data[key]
-                for key in self.fields.keys() if key in lookup_cols
+                for key in self.fields.keys() if key in self.lookup_fields
                 }
         if None not in filters.values():
             return self.session.query(
@@ -126,21 +125,62 @@ class SocrataInspectionSchema(ma.ModelSchema):
             ).first()
         return None
 
+
+class SocrataInspectionSchema(LookupMixin):
+
+    lookup_fields = (
+            "date_inspected",
+            "permit_number",
+            "display_description",
+            "inspector_id"
+            )
+
+    date_inspected = fields.DateTime(
+            format=SOCRATA_DATE_FMT,
+            load_from="date")
+    permit_description = fields.String(
+            load_from="inspection_description")
+    display_description = fields.String(
+            load_from="disp_description")
+
     class Meta:
         model = Inspection
+        fields = (
+                'permit_number',
+                'date_inspected',
+                'permit_type',
+                'permit_description',
+                'display_description',
+                'job_site_address',
+                'inspector_id',
+                )
 
 
-class SocrataInspectorSchema(ma.ModelSchema):
+class SocrataInspectorSchema(LookupMixin):
+
+    lookup_fields = (
+            "inspector_key",
+            )
 
     inspector_key = fields.String(load_from="inspector_id")
     photo_url = fields.String(load_from="photo")
-    supervisor_email = fields.String(load_from="super_email")
 
     class Meta:
         model = Inspector
+        fields = (
+                'inspector_key',
+                'first_name',
+                'last_name',
+                'photo_url',
+                'supervisor_id',
+                )
 
 
-class SocrataSupervisorSchema(ma.ModelSchema):
+class SocrataSupervisorSchema(LookupMixin):
+
+    lookup_fields = (
+            "email",
+            )
 
     email = fields.Email(load_from="super_email")
     full_name = fields.String(load_from="super_name")
