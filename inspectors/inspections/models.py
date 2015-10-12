@@ -10,6 +10,8 @@ from inspectors.database import (
     SurrogatePK,
 )
 
+REPR_DATE_FMT = "%Y/%m/%d"
+
 class Supervisor(Model):
     """A person who supervises building inspectors"""
     __tablename__ = 'supervisor'
@@ -65,7 +67,7 @@ class Inspection(Model):
 
     def __repr__(self):
         return '<Inspection({0}:{1})>'.format(self.permit_number,
-                self.date_inspected.strftime("%Y/%m/%d"))
+                self.date_inspected.strftime(REPR_DATE_FMT))
 
 
 class InspectionFeedback(Model):
@@ -84,6 +86,6 @@ class InspectionFeedback(Model):
     def __repr__(self):
         d = self.date_sent
         return '<InspectionFeedback({})>'.format(
-                "sent on: " + d.strftime("") if d else "unsent"
+                "sent on: " + d.strftime(REPR_DATE_FMT) if d else "unsent"
                 )
 

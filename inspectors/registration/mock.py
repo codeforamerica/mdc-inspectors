@@ -48,10 +48,11 @@ class FakeUserProvider(BaseProvider):
         return chance(0.9)
 
     def date_registered(self):
-        delta = dt.timedelta(days=rn.randint(-30,0))
+        delta = dt.timedelta(days=rn.randint(-30,0), minutes=rn.randint(-700,
+            700))
         now = dt.datetime.now()
         date = now + delta
-        return date
+        return date.isoformat()
 
     def permit_numbers(self, n=1):
         count = range(n)
@@ -61,9 +62,10 @@ class FakeUserProvider(BaseProvider):
                     Inspection.permit_number.distinct().label("permit_number")
                     )
             numbers = [row.permit_number for row in query.all()]
-            for i in range(n):
-                permit_numbers.append(rn.choice(numbers))
-        else:
+            if numbers:
+                for i in range(n):
+                    permit_numbers.append(rn.choice(numbers))
+        if not db.session or not permit_numbers:
             fmt = "20##0#####"
             gen = lambda x: fake.bothify(fmt)
             permit_numbers = map(count, gen)
