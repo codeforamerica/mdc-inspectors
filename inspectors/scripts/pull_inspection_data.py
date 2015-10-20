@@ -22,7 +22,7 @@ from inspectors.inspections.serializers import (
         )
 
 
-USE_JSON_CACHE = True
+USE_JSON_CACHE = False
 json_cache_path = "data.json"
 
 
@@ -33,12 +33,13 @@ def json_cache_exists():
 def socrata_query():
     timedelta = dt.timedelta(days=-3)
     now = dt.datetime.now()
+    tomorrow = now + dt.timedelta(days=1)
     three_days_ago = now + timedelta
     date_format = SOCRATA_DATE_FMT
     endpoint = "https://opendata.miamidade.gov/resource/ba6h-bksp.json"
-    query = "?$where=date > '{three_days_ago}' AND date < '{now}'".format(
+    query = "?$where=date > '{three_days_ago}' AND date < '{tomorrow}'".format(
             three_days_ago=three_days_ago.strftime(date_format),
-            now=now.strftime(date_format),
+            tomorrow=tomorrow.strftime(date_format),
             )
     request = requests.get( endpoint + query )
     return request.json()

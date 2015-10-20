@@ -62,7 +62,6 @@ class DataLoader:
             foreign_key_instance = other.models[j]
             own[fk_field_name] = foreign_key_instance.id
 
-
     def log_errors(self, errors):
         for i, error in errors.items():
             problematic_datum = self.raw_data[i]
@@ -187,6 +186,10 @@ class SocrataSupervisorSchema(LookupMixin):
 
     class Meta:
         model = Supervisor
+        fields = (
+                'email',
+                'full_name',
+                )
 
 
 supervisor_schema = SocrataSupervisorSchema()
