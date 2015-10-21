@@ -34,29 +34,19 @@ def get_or_create_feedback_record(user, inspection):
         created = True
     return created, feedback_record
 
+def send_request_for_feedback(user, inspection):
+    if user.email:
+        print( "email", user.email, print_inspection(inspection) )
+    if user.phone_number:
+        print( "text", user.phone_number, print_inspection(inspection) )
+
 
 def send_requests():
     # filter inspections to those that have recently happened.
     q = active_users_with_past_inspections()
-    records = []
-    new = False
     # create all necessary records
     for user, inspection in q.all():
-        #created, record = get_or_create_feedback_record(user, inspection)
-        if user.email:
-            print( "email", user.email, print_inspection(inspection))
-        if user.phone_number:
-            print( "text", user.phone_number, print_inspection(inspection))
-        #records.append(record)
-        #new = new or created
-    # save any created records
-    #if new:
-        #db.session.commit()
-
-
-
-
-
+        send_request_for_feedback(user, inspection)
 
 def run():
     app = create_app()

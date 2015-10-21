@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
+import os
 import sys
 import logging
 
 from flask import Flask, render_template
+from werkzeug.utils import import_string
 
 from inspectors.settings import ProdConfig
 from inspectors.assets import assets
@@ -19,14 +21,17 @@ from inspectors.extensions import (
 from inspectors import registration, inspections
 
 
-def create_app(config_object=ProdConfig):
+def create_app():
     """An application factory, as explained here:
         http://flask.pocoo.org/docs/patterns/appfactories/
-
-    :param config_object: The configuration object to use.
     """
+    config_string = os.environ.get('CONFIG', 'inspectors.settings.ProdConfig')
+    if isinstance(config_string, str):
+        config = import_string(config_string)
+    else:
+        config = config_string
     app = Flask(__name__)
-    app.config.from_object(config_object)
+    app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
@@ -69,3 +74,4 @@ def register_logging(app):
 %(asctime)s | %(name)s | %(levelname)s in %(module)s: %(message)s'''))
     app.logger.addHandler(stdout)
     return None
+

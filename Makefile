@@ -22,3 +22,12 @@ add_fake_users:
 request_feedback:
 	python ./inspectors/scripts/send_requests_for_feedback.py
 
+create_test_db:
+	createdb mdc_inspectors_test
+
+destroy_test_db:
+	dropdb mdc_inspectors_test
+
+test:
+	nosetests \
+		-sv
