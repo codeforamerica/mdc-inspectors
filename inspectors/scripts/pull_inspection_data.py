@@ -72,11 +72,12 @@ def load_data():
         )]
 
     for row in data:
-        relations.append({
-            'supervisor': supervisors.slice_and_add(row),
-            'inspector': inspectors.slice_and_add(row),
-            'inspection': inspections.slice_and_add(row),
-            })
+        if row:
+            relations.append({
+                'supervisor': supervisors.slice_and_add(row),
+                'inspector': inspectors.slice_and_add(row),
+                'inspection': inspections.slice_and_add(row),
+                })
 
     supervisors.save_models_or_report_errors()
 
