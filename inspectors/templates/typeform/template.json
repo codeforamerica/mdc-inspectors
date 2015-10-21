@@ -1,0 +1,82 @@
+{
+  "title": "Miami-Dade County Inspection Feedback Form",
+  "design_id": "S2WEqhUbbc",
+  "fields": [
+    {
+      "type": "statement",
+      "question": "Thanks for helping us improve our inspection service! Your feedback will be shared with County executives and any specific questions will be routed to the appropriate section director."
+    },
+    {
+      "type": "statement",
+      "question": "You recently had an **{permit_type}** inspection for Miami-Dade Permit #{permit_number} with **{inspector_first} {inspector_last}** at **{address}**. According to our records, the inspection resulted in **{result}**. \n\nWe'd like to ask some questions regarding your recent experience."
+    },
+    {
+      "type": "multiple_choice",
+      "question": "Which of the following most accurately describes your primary role in the inspection process?",
+      "required": true,
+      "tags": ["role"],
+      "choices": [
+        {
+          "label": "Contractor"
+        },
+        {
+          "label": "Architect/Engineer"
+        },
+        {
+          "label": "Permit Consultant"
+        },
+        {
+          "label": "Homeowner"
+        },
+        {
+          "label": "Business Owner"
+        }
+      ]
+    },
+    {
+      "type": "multiple_choice",
+      "question": "Who was present during your most recent inspection?",
+      "required": true,
+      "allow_multiple_selections": true,
+      "tags": ["present"],
+      "choices": [
+        {
+          "label": "Contractor"
+        },
+        {
+          "label": "Architect/Engineer"
+        },
+        {
+          "label": "Permit Consultant"
+        },
+        {
+          "label": "Homeowner"
+        },
+        {
+          "label": "Business Owner"
+        }
+      ]
+    },
+    {
+      "type": "opinion_scale",
+      "question": "How would you rate your experience with {inspector_first} {inspector_last}?",
+      "tags": ["rating"],
+      "steps": 7
+    },
+    {
+      "type": "short_text",
+      "tags": ["contact"],
+      "question": "Would you like someone to follow-up with you in regards to your experience? If so, please enter a way we can contact you, either your e-mail or telephone number.",
+      "description": "You may also leave this blank if you don't want anyone to contact you regarding this survey."
+    },
+    {
+      "type": "long_text",
+      "tags": ["other_comments"],
+      "question": "Any other questions or comments?"
+    },
+    {
+      "type": "statement",
+      "question": "Thanks again for reaching out! Your feedback will be shared with County executives and any specific questions will be routed to the appropriate section director."
+    }
+  ]
+}
