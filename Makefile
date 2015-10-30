@@ -29,5 +29,6 @@ destroy_test_db:
 	dropdb mdc_inspectors_test
 
 test:
+	export CONFIG='inspectors.settings.TestConfig'
 	nosetests \
 		-sv
