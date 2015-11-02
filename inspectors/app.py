@@ -26,10 +26,7 @@ def create_app():
         http://flask.pocoo.org/docs/patterns/appfactories/
     """
     config_string = os.environ.get('CONFIG', 'inspectors.settings.ProdConfig')
-    if isinstance(config_string, str):
-        config = import_string(config_string)
-    else:
-        config = config_string
+    config = import_string(config_string)
     app = Flask(__name__)
     app.config.from_object(config)
     register_extensions(app)

@@ -131,7 +131,6 @@ class FakeSocrataProvider(BaseProvider):
     def socrata_row(self):
         row = {}
         for key in self.fields:
-            print(key)
             gen_method = getattr(self, key)
             row[key] = gen_method()
         return row

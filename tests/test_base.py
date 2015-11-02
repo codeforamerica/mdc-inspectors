@@ -1,14 +1,7 @@
 import unittest
+from flask.ext.testing import TestCase
 from inspectors.app import db, create_app as _create_app
 from inspectors.settings import TestConfig
-from sqlalchemy.schema import (
-    MetaData,
-    Table,
-    DropTable,
-    ForeignKeyConstraint,
-    DropConstraint,
-)
-from flask_testing import TestCase
 
 class BaseTestCase(TestCase):
 
@@ -22,5 +15,3 @@ class BaseTestCase(TestCase):
         db.session.remove()
         db.drop_all()
         db.get_engine(self.app).dispose()
-
-

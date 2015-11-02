@@ -21,16 +21,17 @@ SOCRATA_DATE_FMT = "%Y/%m/%d"
 class DataLoader:
     """A class that deduplicates raw data dictionaries,
         and then attempts to serialize them,
-            either returning successfully validated models
-            or reporting deserialization errors
+        either returning successfully validated models
+        or reporting deserialization errors
     """
+
     def __init__(self, schema):
         self.schema = schema
         self.raw_data = []
         self.models = []
 
     def add(self, data, many=False):
-        """adds data to a raw data set() object
+        """Adds data to a raw data set() object
         """
         indices = []
         data = data if many else (data,)
@@ -44,8 +45,8 @@ class DataLoader:
 
 
     def slice_and_add(self, data):
-        """adds data to the raw data set, but only the subset of keys used by
-        the serialization schema
+        """Adds data to the raw data set, but only the subset of keys used by
+            the serialization schema
         """
         keys = []
         for name, field in self.schema.fields.items():
@@ -72,7 +73,7 @@ class DataLoader:
                     field=key, value=bad_input, message=message))
 
     def log_success(self, total, new, existing):
-        current_app.logger.debug(
+        current_app.logger.info(
             "DESERIALIZED: {total} {cls} instances, {new} new, {existing} existing".format(
                     total = total,
                     cls = self.schema.opts.model.__name__,
@@ -136,7 +137,9 @@ class SocrataInspectionSchema(LookupMixin):
 
     date_inspected = fields.DateTime(
             format=SOCRATA_DATE_FMT,
-            load_from="date")
+            load_from="date",
+            required=True
+            )
     permit_description = fields.String(
             load_from="inspection_description")
     display_description = fields.String(
@@ -161,7 +164,7 @@ class SocrataInspectorSchema(LookupMixin):
             "inspector_key",
             )
 
-    inspector_key = fields.String(load_from="inspector_id")
+    inspector_key = fields.String(load_from="inspector_id", required=True)
     photo_url = fields.String(load_from="photo")
 
     class Meta:
@@ -181,8 +184,8 @@ class SocrataSupervisorSchema(LookupMixin):
             "email",
             )
 
-    email = fields.Email(load_from="super_email")
-    full_name = fields.String(load_from="super_name")
+    email = fields.Email(load_from="super_email", required=True)
+    full_name = fields.String(load_from="super_name", required=True)
 
     class Meta:
         model = Supervisor

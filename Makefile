@@ -31,4 +31,8 @@ destroy_test_db:
 test:
 	export CONFIG='inspectors.settings.TestConfig'
 	nosetests \
-		-sv
+		--verbose \
+		--nocapture \
+		--with-coverage \
+		--cover-package=./inspectors \
+		--cover-erase
