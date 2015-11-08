@@ -63,19 +63,19 @@ class Inspection(Model):
     job_site_address = Column(db.String(200), nullable=False)
     inspector_id = Column(db.Integer, db.ForeignKey('inspector.id'),
             nullable=False)
-    users_feedback = db.relationship('InspectionFeedback', backref='inspection')
+    users_feedback = db.relationship('Feedback', backref='inspection')
 
     def __repr__(self):
         return '<Inspection({0}:{1})>'.format(self.permit_number,
                 self.date_inspected.strftime(REPR_DATE_FMT))
 
 
-class InspectionFeedback(Model):
+class Feedback(Model):
     """A many to many relation table between inspections and users that records
     whether or not we've already asked a user for feedback on one particular
     inspection.
     """
-    __tablename__ = 'inspection_feedback'
+    __tablename__ = 'feedback'
     id = Column(db.Integer, primary_key=True, index=True)
     inspection_id = Column(db.Integer, db.ForeignKey('inspection.id'),
             nullable=False)
@@ -85,7 +85,7 @@ class InspectionFeedback(Model):
 
     def __repr__(self):
         d = self.date_sent
-        return '<InspectionFeedback({})>'.format(
+        return '<Feedback({})>'.format(
                 "sent on: " + d.strftime(REPR_DATE_FMT) if d else "unsent"
                 )
 
