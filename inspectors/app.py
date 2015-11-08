@@ -18,7 +18,7 @@ from inspectors.extensions import (
     migrate,
     debug_toolbar,
 )
-from inspectors import registration, inspections
+from inspectors import (registration, inspections, surveys)
 
 
 def create_app():
@@ -50,6 +50,7 @@ def register_extensions(app):
 
 def register_blueprints(app):
     app.register_blueprint(registration.views.blueprint)
+    app.register_blueprint(surveys.views.blueprint)
     return None
 
 
@@ -71,4 +72,3 @@ def register_logging(app):
 %(asctime)s | %(name)s | %(levelname)s in %(module)s: %(message)s'''))
     app.logger.addHandler(stdout)
     return None
-
