@@ -31,7 +31,7 @@ def json_cache_exists():
 
 
 def socrata_query():
-    timedelta = dt.timedelta(days=-3)
+    timedelta = dt.timedelta(days=-6)
     now = dt.datetime.now()
     tomorrow = now + dt.timedelta(days=1)
     three_days_ago = now + timedelta
@@ -68,31 +68,27 @@ def load_data():
     supervisors, inspectors, inspections = [DataLoader(s) for s in (
             supervisor_schema,
             inspector_schema,
-            inspection_schema,
-        )]
+            inspection_schema)]
 
     for row in data:
         if row:
             relations.append({
                 'supervisor': supervisors.slice_and_add(row),
                 'inspector': inspectors.slice_and_add(row),
-                'inspection': inspections.slice_and_add(row),
-                })
+                'inspection': inspections.slice_and_add(row),})
 
     supervisors.save_models_or_report_errors()
 
     inspectors.add_foreign_keys_from(
-            supervisors,
-            [ (r['inspector'], r['supervisor']) for r in relations ],
-            'supervisor_id'
-            )
+        supervisors,
+        [ (r['inspector'], r['supervisor']) for r in relations ],
+        'supervisor_id')
     inspectors.save_models_or_report_errors()
 
     inspections.add_foreign_keys_from(
-            inspectors,
-            [ (r['inspection'], r['inspector']) for r in relations ],
-            'inspector_id'
-            )
+        inspectors,
+        [ (r['inspection'], r['inspector']) for r in relations ],
+        'inspector_id')
     inspections.save_models_or_report_errors()
 
 

@@ -2,7 +2,40 @@
 Inspectors
 ===============================
 
-Notifies users when an inspection has been completed
+Allows users to give customer service feedback to inspectors after recent inspections.
+
+Status
+------
+Pre-Alpha. This was a stretch goal of the Fellows Team with the expectation to complete thisby the county or through Code for Miami, the local volunteer brigade.
+
+
+Who Built This?
+---------------
+Ernie Hsiung of the 2015 Miami-Dade Fellows Team and Ben Golder of the 2015 RVA Fellows Team. Additional input from Mathias Gibson, Michael Sarasti (Miami-Dade County) and Christa Erml-Martinez (Miami-Dade County).
+
+
+Overview
+--------
+
+User interface which allows users to enter a Miami-Dade County permit number and an e-mail address or a phone number, sending a customer experience survey to users when an inspection has been completed.
+
+At regular intervals we will check the Miami-Dade County inspection routes and results tables, a copy of which is available on the Miami-Dade Open Data portal. If there is a match between a registered permit number and a recent inspection, a customizable survey about the users experiences with the inspector will be sent via e-mail or SMS.
+
+The Typeform.IO generated survey hits a webhook on the codeforamerica/mdc-inspectors-dashboard repo when the survey is completed, and stakeholders and the public can view the dashboard there for results.
+
+
+To Do
+-----
+* [ ] Generate the SMS message using Twilio.
+* [ ] Build the mail script
+
+
+Third-Party Platforms used
+--------------------------
+
+* Typeform.IO: To build dynamic, customizable surveys
+* Sendgrid: The mail platform in the production environment. For development purposes we will be using Google Mail.
+* Twilio: The hope is that to build the SMS component we will use the Twilio platform to send text messages.
 
 
 Quickstart

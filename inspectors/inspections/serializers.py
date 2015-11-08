@@ -11,12 +11,11 @@ from marshmallow import Schema, fields, post_load, pre_load
 from inspectors.extensions import ma
 from inspectors.extensions import db
 from .models import (
-        Supervisor,
-        Inspector,
-        Inspection
-        )
+    Supervisor, Inspector, Inspection
+)
 
 SOCRATA_DATE_FMT = "%Y/%m/%d"
+
 
 class DataLoader:
     """A class that deduplicates raw data dictionaries,
@@ -37,12 +36,11 @@ class DataLoader:
         data = data if many else (data,)
         for d in data:
             try:
-                indices.append( self.raw_data.index(d) )
+                indices.append(self.raw_data.index(d))
             except ValueError:
-                indices.append( len(self.raw_data) )
+                indices.append(len(self.raw_data))
                 self.raw_data.append(d)
         return indices if many else indices[0]
-
 
     def slice_and_add(self, data):
         """Adds data to the raw data set, but only the subset of keys used by
@@ -69,17 +67,18 @@ class DataLoader:
             for key, message in error.items():
                 bad_input = problematic_datum[key]
                 current_app.logger.error(
-                "DESERIALIZATIONERROR: '{field}': '{value}', {message}".format(
-                    field=key, value=bad_input, message=message))
+                    "DESERIALIZATIONERROR: '{field}': '{value}', {message}".format(
+                        field=key,
+                        value=bad_input,
+                        message=message))
 
     def log_success(self, total, new, existing):
         current_app.logger.info(
             "DESERIALIZED: {total} {cls} instances, {new} new, {existing} existing".format(
-                    total = total,
-                    cls = self.schema.opts.model.__name__,
-                    new = new,
-                    existing = existing,
-                    ))
+                total=total,
+                cls=self.schema.opts.model.__name__,
+                new=new,
+                existing=existing))
 
     def save_models_or_report_errors(self):
         """Tries to load data using the schema.
@@ -91,10 +90,9 @@ class DataLoader:
         total = 0
 
         models, errors = self.schema.load(
-                    self.raw_data,
-                    many=True,
-                    session=db.session,
-                )
+            self.raw_data,
+            many=True,
+            session=db.session)
         if errors:
             self.log_errors(errors)
         else:
@@ -109,14 +107,15 @@ class DataLoader:
             self.models = models
             return models
 
+
 class LookupMixin(ma.ModelSchema):
 
     def get_instance(self, data):
         """Overrides ModelSchema.get_instance with custom lookup fields"""
         filters = {
-                key: data[key]
-                for key in self.fields.keys() if key in self.lookup_fields
-                }
+            key: data[key]
+            for key in self.fields.keys() if key in self.lookup_fields}
+
         if None not in filters.values():
             return self.session.query(
                 self.opts.model
@@ -129,40 +128,36 @@ class LookupMixin(ma.ModelSchema):
 class SocrataInspectionSchema(LookupMixin):
 
     lookup_fields = (
-            "date_inspected",
-            "permit_number",
-            "display_description",
-            "inspector_id"
-            )
+        "date_inspected",
+        "permit_number",
+        "display_description",
+        "inspector_id")
 
     date_inspected = fields.DateTime(
-            format=SOCRATA_DATE_FMT,
-            load_from="date",
-            required=True
-            )
+        format=SOCRATA_DATE_FMT,
+        load_from="date",
+        required=True)
     permit_description = fields.String(
-            load_from="inspection_description")
+        load_from="inspection_description")
+
     display_description = fields.String(
-            load_from="disp_description")
+        load_from="disp_description")
 
     class Meta:
         model = Inspection
         fields = (
-                'permit_number',
-                'date_inspected',
-                'permit_type',
-                'permit_description',
-                'display_description',
-                'job_site_address',
-                'inspector_id',
-                )
+            'permit_number',
+            'date_inspected',
+            'permit_type',
+            'permit_description',
+            'display_description',
+            'job_site_address',
+            'inspector_id')
 
 
 class SocrataInspectorSchema(LookupMixin):
 
-    lookup_fields = (
-            "inspector_key",
-            )
+    lookup_fields = ("inspector_key")
 
     inspector_key = fields.String(load_from="inspector_id", required=True)
     photo_url = fields.String(load_from="photo")
@@ -170,19 +165,16 @@ class SocrataInspectorSchema(LookupMixin):
     class Meta:
         model = Inspector
         fields = (
-                'inspector_key',
-                'first_name',
-                'last_name',
-                'photo_url',
-                'supervisor_id',
-                )
+            'inspector_key',
+            'first_name',
+            'last_name',
+            'photo_url',
+            'supervisor_id')
 
 
 class SocrataSupervisorSchema(LookupMixin):
 
-    lookup_fields = (
-            "email",
-            )
+    lookup_fields = ("email")
 
     email = fields.Email(load_from="super_email", required=True)
     full_name = fields.String(load_from="super_name", required=True)
@@ -190,9 +182,8 @@ class SocrataSupervisorSchema(LookupMixin):
     class Meta:
         model = Supervisor
         fields = (
-                'email',
-                'full_name',
-                )
+            'email',
+            'full_name')
 
 
 supervisor_schema = SocrataSupervisorSchema()
