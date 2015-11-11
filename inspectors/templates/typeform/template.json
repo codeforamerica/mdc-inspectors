@@ -1,6 +1,7 @@
 {
   "title": "Miami-Dade County Inspection Feedback Form",
   "design_id": "S2WEqhUbbc",
+  "webhook_submit_url": "https://posthere.io/de71-43de-938f",
   "fields": [
     {
       "type": "statement",
@@ -8,7 +9,7 @@
     },
     {
       "type": "statement",
-      "question": "You recently had an **{permit_type}** inspection for Miami-Dade Permit #{permit_number} with **{inspector_first} {inspector_last}** at **{address}**. According to our records, the inspection resulted in **{result}**. \n\nWe'd like to ask some questions regarding your recent experience."
+      "question": "You recently had an **{{ itype }} ({{ description }})** inspection for Miami-Dade Permit #{{ permit_number }} with **{{ inspector }}** at **{{ addr }}**. According to our records, the inspection was marked **{{ result }}**. \n\nWe'd like to ask some questions regarding your recent experience."
     },
     {
       "type": "multiple_choice",
@@ -59,7 +60,7 @@
     },
     {
       "type": "opinion_scale",
-      "question": "How would you rate your experience with {inspector_first} {inspector_last}?",
+      "question": "How would you rate your experience with {{ inspector }}?",
       "tags": ["rating"],
       "steps": 7
     },
@@ -72,11 +73,8 @@
     {
       "type": "long_text",
       "tags": ["other_comments"],
-      "question": "Any other questions or comments?"
-    },
-    {
-      "type": "statement",
-      "question": "Thanks again for reaching out! Your feedback will be shared with County executives and any specific questions will be routed to the appropriate section director."
+      "question": "Any other questions or comments?",
+      "description": "Thanks again for reaching out! To see the real-time survey data, go to the following link:"
     }
   ]
 }
