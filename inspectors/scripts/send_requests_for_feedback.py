@@ -4,8 +4,9 @@ from inspectors.app import create_app
 from inspectors.app import db
 
 from inspectors.inspections.models import (
-    Inspection, Inspector, InspectionFeedback)
+    Inspection, Inspector, Feedback)
 from inspectors.registration.models import User
+from inspectors.surveys.util import send_email
 
 from inspectors.inspections.queries import (
     active_users_with_past_inspections
@@ -40,6 +41,7 @@ def get_or_create_feedback_record(user, inspection):
 def send_request_for_feedback(user, inspection):
     if user.email:
         print("email", user.email, print_inspection(inspection))
+
     if user.phone_number:
         print("text", user.phone_number, print_inspection(inspection))
 
@@ -53,10 +55,18 @@ def send_requests():
         send_request_for_feedback(user, inspection)
 
 
+def test_email():
+    send_email(
+        'Alo world!',
+        ['ehsiung@codeforamerica.org', 'bgolder@codeforamerica.org'],
+        'hiyee from inspector!')
+
+
 def run():
     app = create_app()
     with app.app_context():
-        send_requests()
+        # send_requests()
+        test_email()
 
 if __name__ == '__main__':
     run()
