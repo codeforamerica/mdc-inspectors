@@ -16,7 +16,7 @@ class Config(object):
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
-    TYPEFORMIO_KEY = '70b84fe857c39c5653f17fd845143f11'
+    TYPEFORMIO_KEY = os_env.get('TYPEFORMIO_KEY')
     ADMIN_EMAIL = os_env.get('ADMIN_EMAIL', 'ehsiung@codeforamerica.org')
     MAIL_USERNAME = os_env.get('MAIL_USERNAME')
     MAIL_PASSWORD = os_env.get('MAIL_PASSWORD')
@@ -51,11 +51,9 @@ class DevConfig(Config):
     ASSETS_DEBUG = True  # Don't bundle/minify static assets
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
     MAIL_SERVER = 'smtp.gmail.com'  # Use gmail in dev: https://support.google.com/mail/answer/1173270?hl=en
-    ADMIN_EMAIL = os_env.get(
-        'ADMIN_EMAIL',
-        'mdcfeedbackdev@gmail.com')
-    MAIL_USERNAME = 'mdcfeedbackdev@gmail.com'
-    MAIL_PASSWORD = 'miamidade305'
+    ADMIN_EMAIL = os_env.get('ADMIN_EMAIL', 'mdcfeedbackdev@gmail.com')
+    MAIL_USERNAME = os_env.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os_env.get('MAIL_PASSWORD')
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     # MAIL_SUPPRESS_SEND = True

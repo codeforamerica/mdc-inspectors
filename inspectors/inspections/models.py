@@ -110,12 +110,12 @@ class Inspection(Model):
         return '<Inspection({0}:{1})>'.format(self.permit_number, self.date_inspected.strftime(REPR_DATE_FMT))
 
 
-class InspectionFeedback(Model):
+class Feedback(Model):
     """A many to many relation table between inspections and users that records
     whether or not we've already asked a user for feedback on one particular
     inspection.
     """
-    __tablename__ = 'inspection_feedback'
+    __tablename__ = 'feedback'
     id = Column(db.Integer, primary_key=True, index=True)
     inspection_id = Column(db.Integer, db.ForeignKey('inspection.id'), nullable=False)
     user_id = Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

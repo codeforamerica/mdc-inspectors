@@ -5,7 +5,7 @@ from sqlalchemy import and_
 from inspectors.app import db
 from inspectors.registration.models import User
 from inspectors.inspections.models import (
-        Inspection, InspectionFeedback,
+        Inspection, Feedback,
         Supervisor, Inspector
         )
 

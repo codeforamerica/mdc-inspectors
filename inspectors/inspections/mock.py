@@ -80,6 +80,7 @@ class FakeSocrataProvider(BaseProvider):
         number = rn.randint(1, 99999)
         alt = rn.randint(100, 9999)
         template = "{year}{number}"
+        return template.format(year=yr, number=number)
 
     def job_site_address(self):
         return rn.choice(( "5945 SW 50 TER", "6055 SW 74 AVE", "6100 SW 104 AVE",
@@ -121,7 +122,7 @@ class FakeSocrataProvider(BaseProvider):
     def super_email(self, name=None):
         if not name:
             name = self.first_name()
-        addr = name.upper()[:6]
+        addr = name.upper()[:6].replace(" ", "")
         template = "{addr}@miamidade.gov"
         return template.format(addr=addr)
 
@@ -133,7 +134,39 @@ class FakeSocrataProvider(BaseProvider):
         for key in self.fields:
             gen_method = getattr(self, key)
             row[key] = gen_method()
+        row['super_email'] = self.super_email(row['super_name'])
         return row
+
+    def socrata_rows(self, count=800):
+        rows = []
+        total_sups = int( rn.gauss(count * 0.02, count * 0.01) )
+        if total_sups < 4:
+            total_sups = 4
+        total_inspectors = int( rn.gauss(count * .5, count * 0.04) )
+        sups = []
+        inspectors = []
+        for i in range(total_sups):
+            sup_name = self.super_name()
+            sups.append({
+                'super_name': sup_name,
+                'super_email': self.super_email(sup_name)
+                })
+        for i in range(total_inspectors):
+            insp = {}
+            for key in ('inspector_id', 'last_name', 'first_name', 'photo'):
+                insp[key] = getattr(self, key)()
+            inspectors.append(insp)
+        for i in range(count):
+            row = {}
+            sup = rn.choice(sups)
+            insp = rn.choice(inspectors)
+            row.update(sup)
+            row.update(insp)
+            for key in ('date', 'inspection_description', 'disp_description',
+                'permit_type', 'permit_number', 'job_site_address'):
+                row[key] = getattr(self, key)()
+            rows.append(row)
+        return rows
 
 
 def make_fake():
