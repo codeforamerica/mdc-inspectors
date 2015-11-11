@@ -19,6 +19,13 @@ load_from_socrata:
 add_fake_users:
 	python ./inspectors/scripts/add_fake_users.py
 
+add_fake_inspections:
+	python ./inspectors/scripts/add_fake_inspections.py
+
+fake_data:
+	make add_fake_inspections
+	make add_fake_users
+
 request_feedback:
 	python ./inspectors/scripts/send_requests_for_feedback.py
 

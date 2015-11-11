@@ -1,7 +1,7 @@
 {
   "title": "Miami-Dade County Inspection Feedback Form",
   "design_id": "S2WEqhUbbc",
-  "webhook_submit_url": "http://requestb.in/1lqkxjn1",
+  "webhook_submit_url": "https://posthere.io/de71-43de-938f",
   "fields": [
     {
       "type": "statement",
@@ -73,11 +73,8 @@
     {
       "type": "long_text",
       "tags": ["other_comments"],
-      "question": "Any other questions or comments?"
-    },
-    {
-      "type": "statement",
-      "question": "Thanks again for reaching out! To see the real-time survey data, click the button below."
+      "question": "Any other questions or comments?",
+      "description": "Thanks again for reaching out! To see the real-time survey data, go to the following link:"
     }
   ]
 }

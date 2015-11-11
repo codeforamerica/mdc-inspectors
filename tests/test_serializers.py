@@ -5,12 +5,14 @@ from inspectors.inspections.serializers import (
         supervisor_schema,
         inspector_schema,
         inspection_schema,
-        DataLoader
+        )
+from inspectors.inspections.util import (
+        SchemaLoader
         )
 from inspectors.inspections.mock import make_fake
 
 
-class TestDataLoader(BaseTestCase):
+class TestSchemaLoader(BaseTestCase):
 
     def setUp(self):
         """All names, characters, and incidents appearing in this
@@ -45,7 +47,7 @@ class TestDataLoader(BaseTestCase):
 
     def test_adding_rows(self):
         # can be created with no schema
-        loader = DataLoader(None)
+        loader = SchemaLoader(None)
         # add a row
         index = loader.add( self.sample_row )
         self.assertEqual(index, 0)
@@ -58,7 +60,7 @@ class TestDataLoader(BaseTestCase):
         self.assertEqual(index, 0)
 
     def test_slicing_data(self):
-        loader = DataLoader(supervisor_schema)
+        loader = SchemaLoader(supervisor_schema)
         copy_row = copy.copy(self.sample_row)
         # add a row
         index = loader.slice_and_add( self.sample_row )
@@ -70,13 +72,13 @@ class TestDataLoader(BaseTestCase):
         self.assertEqual(index, 0)
 
     def test_logs_successful_deserialization(self):
-        loader = DataLoader(supervisor_schema)
+        loader = SchemaLoader(supervisor_schema)
         loader.slice_and_add(self.sample_row)
         with self.assertLogs( current_app.logger, level='INFO' ) as cm:
             loader.save_models_or_report_errors()
 
     def test_logs_deserialization_errors(self):
-        loader = DataLoader(supervisor_schema)
+        loader = SchemaLoader(supervisor_schema)
         copy_row = copy.copy(self.sample_row)
         copy_row['super_email'] = 'not a valid email'
         loader.slice_and_add(copy_row)
