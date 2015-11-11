@@ -1,0 +1,12 @@
+Hello!
+
+We noticed that you've had a recent [TYPE] inspection for Permit [PERMIT NUMBER] at [ADDRESS]. In order to better serve you, we would love to hear about your experiences by taking a six-question survey.
+
+To access the survey, click the following link: [LINK]
+
+Thank you,
+
+Miami-Dade County RER & Communications Departments
+
+
+You are receiving this e-mail because your e-mail address was entered in our notification systems. To unsubscribe, go to [LINK]. Questions? Email us at miami-dade@codeforamerica.org
