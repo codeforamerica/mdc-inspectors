@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime as dt
-from pprint import pprint
 from flask import json, render_template
 
 from inspectors.database import (
@@ -74,7 +72,7 @@ class Inspection(Model):
     display_description = Column(db.String(50), nullable=False)
     job_site_address = Column(db.String(200), nullable=False)
     inspector_id = Column(db.Integer, db.ForeignKey('inspector.id'), nullable=False)
-    users_feedback = db.relationship('InspectionFeedback', backref='inspection')
+    users_feedback = db.relationship('Feedback', backref='inspection')
 
     @property
     def permit_type_full(self):
@@ -124,5 +122,5 @@ class Feedback(Model):
 
     def __repr__(self):
         d = self.date_sent
-        return '<InspectionFeedback({})>'.format(
+        return '<Feedback({})>'.format(
             "sent on: " + d.strftime(REPR_DATE_FMT) if d else "unsent")
