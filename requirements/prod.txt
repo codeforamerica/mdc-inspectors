@@ -44,3 +44,4 @@ marshmallow==2.0.0
 flask-marshmallow==0.6.2
 marshmallow-sqlalchemy==0.6.0
 fake-factory==0.5.3
+Flask-Mail==0.9.1

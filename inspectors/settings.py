@@ -56,7 +56,7 @@ class DevConfig(Config):
     MAIL_PASSWORD = os_env.get('MAIL_PASSWORD')
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    # MAIL_SUPPRESS_SEND = True
+    MAIL_SUPPRESS_SEND = True
 
 
 class TestConfig(Config):
