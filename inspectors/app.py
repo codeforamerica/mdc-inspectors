@@ -10,7 +10,6 @@ from werkzeug.utils import import_string
 from inspectors.settings import ProdConfig
 from inspectors.assets import assets
 from inspectors.extensions import (
-    bcrypt,
     cache,
     db,
     ma,
@@ -38,7 +37,6 @@ def create_app():
 
 def register_extensions(app):
     assets.init_app(app)
-    bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
     ma.init_app(app)

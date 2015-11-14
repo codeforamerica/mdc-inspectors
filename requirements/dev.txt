@@ -4,3 +4,4 @@
 # Testing
 -e git+https://github.com/jarus/flask-testing.git@c969b41b31f60a5a8bacd44b3eb63d1642f2d8bf#egg=Flask_Testing-master
 coverage==4.0.1
+Flask-DebugToolbar==0.10.0

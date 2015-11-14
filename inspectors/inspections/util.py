@@ -76,32 +76,30 @@ class SchemaLoader:
         self.raw_data = []
         self.models = []
 
-    def add(self, data, many=False):
-        """Adds data to a raw data set() object
-        """
-        indices = []
-        data = data if many else (data,)
-        for d in data:
-            try:
-                indices.append( self.raw_data.index(d) )
-            except ValueError:
-                indices.append( len(self.raw_data) )
-                self.raw_data.append(d)
-        return indices if many else indices[0]
-
-
-    def slice_and_add(self, data):
-        """Adds data to the raw data set, but only the subset of keys used by
-            the serialization schema
-        """
+    def _slice(self, datum):
         keys = []
         for name, field in self.schema.fields.items():
             if field.load_from:
                 keys.append(field.load_from)
             else:
                 keys.append(name)
-        sliced = {k:data[k] for k in keys if k in data}
-        return self.add(sliced)
+        return {
+                k:datum[k]
+                for k in keys
+                if k in datum
+                }
+
+    def slice_and_add(self, datum):
+        """Adds data to the raw data set, but only the subset of keys used by
+            the serialization schema
+        """
+        sliced = self._slice(datum)
+        try:
+            idx = self.raw_data.index(sliced)
+        except ValueError:
+            idx = len(self.raw_data)
+            self.raw_data.append(sliced)
+        return idx
 
     def add_foreign_keys_from(self, other, instance_index_pairs, fk_field_name):
         for i, j in instance_index_pairs:
