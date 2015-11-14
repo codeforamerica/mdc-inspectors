@@ -9,3 +9,4 @@ marshmallow==2.2.1
 marshmallow-sqlalchemy==0.6.0
 Flask-Cache==0.13.1
 psycopg2==2.6.1
+Flask-Mail==0.9.1

@@ -1,0 +1,13 @@
+Hello!
+
+We noticed that you've had a recent {{ i.permit_type_full }} inspection for Miami-Dade County Permit #{{ i.permit_number }} at {{ i.job_site_address }}. In order to better serve you, we would love to hear about your experiences by taking a six-question survey.
+
+To access the survey, go to the following link:
+{{ i.generate_typeform_url() }}
+
+Thank you,
+
+Miami-Dade County RER & Communications Departments
+
+
+You are receiving this e-mail because your e-mail address was entered in our notification systems. To unsubscribe, go to [LINK]. Questions? Email us at miami-dade@codeforamerica.org
