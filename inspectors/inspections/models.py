@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime as dt
 from flask import json, render_template
 
 from inspectors.database import (
@@ -117,7 +118,7 @@ class Feedback(Model):
     id = Column(db.Integer, primary_key=True, index=True)
     inspection_id = Column(db.Integer, db.ForeignKey('inspection.id'), nullable=False)
     user_id = Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    date_sent = Column(db.DateTime, nullable=True, default=True)
+    date_sent = Column(db.DateTime, nullable=True, default=dt.datetime.utcnow)
     typeform_key = Column(db.String(50), nullable=True)
 
     def __repr__(self):

@@ -14,8 +14,14 @@ class Survey(Model):
     __tablename__ = 'surveys'
 
     id = Column(db.Integer, primary_key=True, index=True)
+    date_submitted = Column(db.DateTime, nullable=False, index=True)
     rating = Column(db.Integer, nullable=False)
-    follow_up = Column(db.Boolean(), default=False)
-    token = Column(db.String(100), nullable=True)
+    get_done = Column(db.Boolean(), default=False)
+    token = Column(db.String(100), nullable=False)
+    role = Column(db.Integer, nullable=False)
+    uid = Column(db.String(100), nullable=True)
     contact = Column(db.String(500), nullable=True)
     more_comments = Column(db.String(2000), nullable=True)
+    follow_up = Column(db.Boolean(), default=False)
+    permit_type = Column(db.String(50), nullable=False)
+    know_to_pass = Column(db.Boolean(), default=False)

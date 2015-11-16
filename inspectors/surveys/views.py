@@ -1,13 +1,43 @@
 # -*- coding: utf-8 -*-
 from flask import (
-    Blueprint, request, json
+    Blueprint, request, json, Response
 )
+from .models import Survey
 
-blueprint = Blueprint('surveys', __name__, url_prefix='/surveys', static_folder="../static")
+blueprint = Blueprint(
+    'surveys',
+    __name__,
+    url_prefix='/surveys',
+    static_folder="../static")
 
 
-def do_something(json):
-    return json
+def parse_payload(resp):
+
+    # FIXME - assumes the schema has been validated. I don't understand why I keep getting "View function did not return a response" errors.
+    for row in resp['answers']:
+        print (row, row['tags'][0])
+        tag = row['tags'][0]
+        if tag == 'other_comments':
+            pass
+        elif tag == 'role':
+            pass
+        elif tag == 'contact':
+            pass
+        elif tag == 'role':
+            pass
+        elif tag == 'rating':
+            pass
+        elif tag == 'present':
+            pass
+        else:
+            pass
+
+    survey = Survey(
+        token=resp['token'],
+        uid=resp['uid']
+    )
+
+    return resp
 
 
 @blueprint.route("/webhook", methods=['GET', 'POST'])
@@ -22,11 +52,13 @@ def webhook():
     if request.method == 'POST':
         try:
             payload = json.loads(request.data)
-            print ("HTTP/1.1 200 OK")
-            print (payload)
-            return 'OK'
+            parse_payload(payload)
+            # FIXME: Get schema to work - I don't know why it doesn't
+
+            return 'OK', 202
         except:
             pass
     else:
         # Probably raise an error of some sort or redirect
-        print ('GETS HERE FWIW')
+        resp = Response(status=200)
+        return resp
