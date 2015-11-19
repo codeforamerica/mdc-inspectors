@@ -11,8 +11,6 @@ from inspectors.database import (
     SurrogatePK,
 )
 
-from inspectors.surveys.typeform import TypeformIOClass
-
 REPR_DATE_FMT = "%Y/%m/%d"
 
 
@@ -86,10 +84,12 @@ class Inspection(Model):
             'ZONE': 'Zoning'
         }.get(self.permit_type, self.permit_type)
 
-    def generate_typeform_url(self):
+    def generate_tf_id(self):
         ''' Generate the Typeform URL of the personalized
         form - necessary for the inspection_feedback table
         '''
+        from inspectors.surveys.typeform import TypeformIOClass
+
         tf = TypeformIOClass()
         inspector = Inspector.query.get(self.inspector_id).full_name
         str_quiz = render_template(
@@ -103,7 +103,17 @@ class Inspection(Model):
 
         json_quiz = json.loads(str_quiz)
         result = tf.make_call(json_quiz)
-        return result['_links'][1]['href']
+        return result['id']
+
+    @property
+    def tf_url(self):
+        return 'https://forms.typeform.io/to/' + self.generate_tf_id()
+
+    def is_cancelled(self):
+        return self.display_description in ('CANCELLATION BY INTERNET', 'INSPECTION CANCELLATION')
+
+    def is_passed(self):
+        return self.display_description in ('APPROVED')
 
     def __repr__(self):
         return '<Inspection({0}:{1})>'.format(self.permit_number, self.date_inspected.strftime(REPR_DATE_FMT))
@@ -116,10 +126,10 @@ class Feedback(Model):
     """
     __tablename__ = 'feedback'
     id = Column(db.Integer, primary_key=True, index=True)
-    inspection_id = Column(db.Integer, db.ForeignKey('inspection.id'), nullable=False)
     user_id = Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date_sent = Column(db.DateTime, nullable=True, default=dt.datetime.utcnow)
-    typeform_key = Column(db.String(50), nullable=True)
+    typeform_key = Column(db.String(50), nullable=False)
+    inspection_id = Column(db.Integer, db.ForeignKey('inspection.id'), nullable=False)
 
     def __repr__(self):
         d = self.date_sent

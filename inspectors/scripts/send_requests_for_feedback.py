@@ -16,7 +16,7 @@ def print_inspection(i):
         i.permit_description + "(" + i.permit_type + ") inspection at",
         i.job_site_address,
         "on " + i.date_inspected.strftime("%Y/%m/%d"),
-        "at " + i.generate_typeform_url()])
+        "at " + i.tf_url])
 
 
 def email_inspection(u, i):
@@ -34,7 +34,7 @@ def get_or_create_feedback(user, inspection):
     data = dict(
         user_id=user.id,
         inspection_id=inspection.id,
-        typeform_key=inspection.generate_typeform_url())
+        typeform_key=inspection.generate_tf_id())
 
     feedback = Feedback.query.filter_by(**data).first()
     if not feedback:
