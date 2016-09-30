@@ -1,7 +1,6 @@
 from flask import render_template
 
 from inspectors.app import create_app
-from inspectors.app import db
 
 from inspectors.inspections.models import Feedback
 from inspectors.surveys.util import send_email
@@ -17,7 +16,7 @@ def print_inspection(i):
         i.permit_description + "(" + i.permit_type + ") inspection at",
         i.job_site_address,
         "on " + i.date_inspected.strftime("%Y/%m/%d"),
-        "at " + i.generate_typeform_url()])
+        "at " + i.tf_url])
 
 
 def email_inspection(u, i):
@@ -26,20 +25,23 @@ def email_inspection(u, i):
     send_email(subj, [u.email], template)
 
 
-def get_or_create_feedback_record(user, inspection):
+def get_or_create_feedback(user, inspection):
+    ''' Mark in the inspection_feedback table the user ID,
+    inspection ID, send date and the typeform ID of the survey.
+    We'll need this to get metadata about the survey as well.
+    '''
     created = False
     data = dict(
         user_id=user.id,
-        inspection_id=inspection.id)
+        inspection_id=inspection.id,
+        typeform_key=inspection.generate_tf_id())
 
-    feedback_record = db.session.query(Feedback).filter_by(**data).first()
-
-    if not feedback_record:
-        feedback_record = Feedback(**data)
-        db.session.add(feedback_record)
+    feedback = Feedback.query.filter_by(**data).first()
+    if not feedback:
+        feedback = Feedback.create(**data)
         created = True
 
-    return created, feedback_record
+    return created, feedback
 
 
 def send_request_for_feedback(user, inspection):
@@ -57,21 +59,19 @@ def send_requests():
 
     # create all necessary records
     for user, inspection in q.all():
-        send_request_for_feedback(user, inspection)
-
-
-def test_email():
-    send_email(
-        'Alo world!',
-        ['ehsiung@codeforamerica.org', 'bgolder@codeforamerica.org'],
-        'hiyee from inspector!')
+        created, feedback_record = get_or_create_feedback(user, inspection)
+        if created:
+            send_request_for_feedback(user, inspection)
 
 
 def run():
+    ''' This is a script run daily that will do the following:
+    Find activate users with past inspections
+    Send requests for feedback, either by e-mail or sms
+    '''
     app = create_app()
     with app.app_context():
         send_requests()
-        # test_email()
 
 if __name__ == '__main__':
     run()

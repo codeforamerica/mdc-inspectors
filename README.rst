@@ -6,7 +6,7 @@ Allows users to give customer service feedback to inspectors after recent inspec
 
 Status
 ------
-Pre-Alpha. This was a stretch goal of the Fellows Team with the expectation to complete thisby the county or through Code for Miami, the local volunteer brigade.
+Pre-Alpha. This was a stretch goal of the Fellows Team with the expectation to complete this by the Miami-Dade County Communications Group, with possible assistance from Code for Miami, the local volunteer brigade.
 
 
 Who Built This?

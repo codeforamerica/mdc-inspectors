@@ -3,7 +3,7 @@ Hello!
 We noticed that you've had a recent {{ i.permit_type_full }} inspection for Miami-Dade County Permit #{{ i.permit_number }} at {{ i.job_site_address }}. In order to better serve you, we would love to hear about your experiences by taking a six-question survey.
 
 To access the survey, go to the following link:
-{{ i.generate_typeform_url() }}
+{{ i.tf_url }}
 
 Thank you,
 
